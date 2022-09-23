@@ -6,7 +6,7 @@ from helper_funcs import filterTickers
 import sqlite3
 
 # Create current directory
-currentDirectory = '/var/www/hmtl/Finviz-Customsdfgs'
+currentDirectory = '/var/www/hmtl/Finviz-Customs'
 
 # Create connections to databases
 con_big = sqlite3.connect(f"{currentDirectory}/databases/big_list.sqlite")
