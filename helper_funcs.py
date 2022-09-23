@@ -7,17 +7,20 @@ toDate = datetime.datetime.now()
 toDate = toDate + datetime.timedelta( (4-toDate.weekday()) % 7 )
 toDate = toDate.strftime("%Y-%m-%d")
 
-tickers = []
-
 def filterTickers(mainList, filteredList, tableName):
+    tickers = []
     for row in mainList.execute("select ticker from screener_results"):
         tickers.append(row)
 
     for ticker in tqdm(tickers, desc = 'Filtering big' if tableName=='big_filtered' else 'Filtering 20-100'):
         data = callApi(ticker)
-
-        if (data['status'] == "FAILED"): # Closest friday had no options, hence failed
-            continue
+        
+        try:
+            if (data['status'] == "FAILED"): # Closest friday had no options, hence failed
+                #print('no friday options for: ' + ticker[0] + ' :)')
+                continue
+        except:
+            print("problematic ticker: " + ticker[0])
 
         # Add to filtered list
         filteredList.execute(f"insert into {tableName} (ticker) values ('{ticker[0]}')")

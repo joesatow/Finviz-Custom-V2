@@ -6,7 +6,8 @@ from helper_funcs import filterTickers
 import sqlite3
 
 # Create current directory
-currentDirectory = '/var/www/hmtl/Finviz-Customs'
+#currentDirectory = '/var/www/hmtl/Finviz-Customs'
+currentDirectory = '/Library/Webserver/Documents/v2'
 
 # Create connections to databases
 con_big = sqlite3.connect(f"{currentDirectory}/databases/big_list.sqlite")
@@ -31,8 +32,8 @@ finally:
 
 
 # Filters
-bigFilters = ["sh_curvol_o200", "sh_opt_option","sh_price_o100"] # Big filter
-tohFilters = ["sh_curvol_o2000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
+bigFilters = ["sh_curvol_o2000", "sh_opt_option","sh_price_o100"] # Big filter
+tohFilters = ["sh_curvol_o20000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
 
 # Screening/scraping finviz process
 print("Starting 'Big' screen...")
