@@ -5,11 +5,14 @@ from tqdm import tqdm
 from helper_funcs import filterTickers
 import sqlite3
 
+# Create current directory
+currentDirectory = '/var/www/hmtl/Finviz-Custom'
+
 # Create connections to databases
-con_big = sqlite3.connect("/Library/WebServer/Documents/v2/databases/big_list.sqlite")
-con_toh = sqlite3.connect("/Library/WebServer/Documents/v2/databases/toh_list.sqlite")
-con_big_filtered = sqlite3.connect("/Library/WebServer/Documents/v2/databases/big_list_filtered.sqlite") 
-con_toh_filtered = sqlite3.connect("/Library/WebServer/Documents/v2/databases/toh_list_filtered.sqlite")
+con_big = sqlite3.connect(f"{currentDirectory}/databases/big_list.sqlite")
+con_toh = sqlite3.connect(f"{currentDirectory}/databases/toh_list.sqlite")
+con_big_filtered = sqlite3.connect(f"{currentDirectory}/databases/big_list_filtered.sqlite") 
+con_toh_filtered = sqlite3.connect(f"{currentDirectory}/databases/toh_list_filtered.sqlite")
 
 # Create database cursors
 cur_big = con_big.cursor()  
@@ -41,8 +44,8 @@ toh_list = Screener(filters=tohFilters, order="ticker")
 print("")
 print("Exporting to sqlite databases...")
 # Create a SQLite database
-big_list.to_sqlite("/Library/WebServer/Documents/v2/databases/big_list.sqlite")
-toh_list.to_sqlite("/Library/WebServer/Documents/v2/databases/toh_list.sqlite")
+big_list.to_sqlite(f"{currentDirectory}/databases/big_list.sqlite")
+toh_list.to_sqlite(f"{currentDirectory}/databases/toh_list.sqlite")
 
 # Get and display current counts
 print("Big count: " + str(cur_big.execute("select count(No) from screener_results").fetchall()[0][0]))
