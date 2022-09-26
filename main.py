@@ -24,14 +24,14 @@ cur_big_filtered = con_big_filtered.cursor()
 cur_toh_filtered = con_toh_filtered.cursor()
 
 # Clear current DB's
-cur_big.execute("drop table screener_results")
-cur_toh.execute("drop table screener_results")
-cur_big_filtered.execute("drop table big_filtered")
-cur_toh_filtered.execute("drop table toh_filtered")
+cur_big.execute("drop table if exists screener_results")
+cur_toh.execute("drop table if exists screener_results")
+cur_big_filtered.execute("drop table if exists big_filtered")
+cur_toh_filtered.execute("drop table if exists toh_filtered")
 
 # Filters
-bigFilters = ["sh_curvol_o2000", "sh_opt_option","sh_price_o100"] # Big filter
-tohFilters = ["sh_curvol_o20000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
+bigFilters = ["sh_curvol_o200", "sh_opt_option","sh_price_o100"] # Big filter
+tohFilters = ["sh_curvol_o2000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
 
 # Screening/scraping finviz process
 big_list = Screener(filters=bigFilters, order="ticker")
@@ -65,6 +65,7 @@ print('Filtered 20-100 count: ' + str(cur_toh_filtered.execute("select count(tic
 # Commit changes to databases
 con_toh_filtered.commit()
 con_big_filtered.commit()
+
 print("")
 end_time = time.time()
 print(f"Done. Execution time: {((end_time - start_time)/60):.2f} minutes.")

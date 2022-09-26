@@ -16,7 +16,7 @@ def filterTickers(mainList, filteredList, tableName):
     for row in mainList.execute("select ticker from screener_results"):
         tickers.append(row)
 
-    for ticker in tqdm(tickers, desc = "'Filtering 'big'" if tableName=='big_filtered' else "'Filtering '20-100'"):
+    for ticker in tqdm(tickers, desc = "Filtering 'big'" if tableName=='big_filtered' else "Filtering '20-100'"):
         data = callApi(ticker)
         
         if (data['status'] == "FAILED"): # Closest friday had no options, hence failed
