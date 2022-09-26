@@ -71,7 +71,6 @@ class Screener(object):
         custom=None,
         user_agent=generate_user_agent(),
         request_method="sequential",
-        description=None
     ):
         """
         Initializes all variables to its values
@@ -125,7 +124,6 @@ class Screener(object):
         self._signal = signal
         self._user_agent = user_agent
         self._request_method = request_method
-        self._description = description
 
         self.analysis = []
         self.data = self.__search_screener()
@@ -317,9 +315,6 @@ class Screener(object):
 
         export_to_db(self.headers, self.data, filename)
 
-    def get_description(self):
-        return self._description
-
     def to_csv(self, filename: str):
         """Exports the generated table into a CSV file.
         Returns a CSV string if filename is None.
@@ -387,6 +382,7 @@ class Screener(object):
                 for row in self.data
             ],
             self._user_agent,
+            passedFilters = "test",
         )
 
         for entry in ticker_data:
@@ -459,6 +455,7 @@ class Screener(object):
                 self._user_agent,
                 self.headers,
                 self._rows,
+                passFilters = self._filters
             )
 
         data = []

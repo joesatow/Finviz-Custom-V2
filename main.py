@@ -1,9 +1,11 @@
 #!/usr/bin/python3
-
 from finviz.screener import Screener
-from tqdm import tqdm
-from helper_funcs import filterTickers
+
 import sqlite3
+import time
+start_time = time.time()
+
+print("")
 
 # Create current directory
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
@@ -22,24 +24,17 @@ cur_big_filtered = con_big_filtered.cursor()
 cur_toh_filtered = con_toh_filtered.cursor()
 
 # Clear current DB's
-try:
-    cur_big.execute("drop table screener_results")
-    cur_toh.execute("drop table screener_results")
-    cur_big_filtered.execute("drop table big_filtered")
-    cur_toh_filtered.execute("drop table toh_filtered")
-finally:
-    pass
-
+cur_big.execute("drop table screener_results")
+cur_toh.execute("drop table screener_results")
+cur_big_filtered.execute("drop table big_filtered")
+cur_toh_filtered.execute("drop table toh_filtered")
 
 # Filters
 bigFilters = ["sh_curvol_o2000", "sh_opt_option","sh_price_o100"] # Big filter
 tohFilters = ["sh_curvol_o20000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
 
 # Screening/scraping finviz process
-print("Starting 'Big' screen...")
-big_list = Screener(filters=bigFilters, order="ticker", description='tester')
-
-print("Starting '20-100' screen...")
+big_list = Screener(filters=bigFilters, order="ticker")
 toh_list = Screener(filters=tohFilters, order="ticker")
 
 print("")
@@ -57,11 +52,13 @@ cur_big_filtered.execute('create table if not exists big_filtered (ticker varcha
 cur_toh_filtered.execute('create table if not exists toh_filtered (ticker varchar(5))')
 
 print("")
+from helper_funcs import filterTickers
 # Filter tickers that only have nearest friday options
-filterTickers(cur_big, cur_big_filtered, 'big_filtered')
+filterTickers(cur_big, cur_big_filtered, 'big_filtered')  
 filterTickers(cur_toh, cur_toh_filtered, 'toh_filtered')
 
 # Get and display current FILTERED counts
+print("")
 print("Filtered big count: " + str(cur_big_filtered.execute("select count(ticker) from big_filtered").fetchall()[0][0]))
 print('Filtered 20-100 count: ' + str(cur_toh_filtered.execute("select count(ticker) from toh_filtered").fetchall()[0][0]))
 
@@ -69,4 +66,5 @@ print('Filtered 20-100 count: ' + str(cur_toh_filtered.execute("select count(tic
 con_toh_filtered.commit()
 con_big_filtered.commit()
 print("")
-print("Done.")
+end_time = time.time()
+print(f"Done. Execution time: {((end_time - start_time)/60):.2f} minutes.")

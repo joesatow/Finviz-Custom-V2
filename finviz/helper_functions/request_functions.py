@@ -59,11 +59,13 @@ def finviz_request(url: str, user_agent: str) -> Response:
 
 
 def sequential_data_scrape(
-    scrape_func: Callable, urls: List[str], user_agent: str, *args, **kwargs
+    scrape_func: Callable, urls: List[str], user_agent: str, *args, **kwargs,
 ) -> List[Dict]:
     data = []
+    
+    currentFilterVol = int(kwargs['passFilters'][0].split('_')[2][1::])
 
-    for url in tqdm(urls, disable="DISABLE_TQDM" in os.environ):
+    for url in tqdm(urls, desc="Grabbing screen 'Big'" if currentFilterVol == 200 else "Grabbing screen '20-100'", disable="DISABLE_TQDM" in os.environ):
         try:
             response = finviz_request(url, user_agent)
             kwargs["URL"] = url
