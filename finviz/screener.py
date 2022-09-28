@@ -7,7 +7,6 @@ from warnings import filters
 
 from bs4 import BeautifulSoup
 from user_agent import generate_user_agent
-
 import finviz.helper_functions.scraper_functions as scrape
 from finviz.helper_functions.display_functions import create_table_string
 from finviz.helper_functions.error_handling import InvalidTableType, NoResults
@@ -364,10 +363,12 @@ class Screener(object):
         sequential_data_scrape(
             scrape.download_chart_image,
             [
-                f"https://finviz.com/chart.ashx?{encoded_payload}&t={row.get('Ticker')}"
+                f"https://finviz.com/chart.ashx?{encoded_payload}&t={row}"
                 for row in self.data
             ],
             self._user_agent,
+            chartConfig=period,
+            passFilters = self._filters
         )
 
     def get_ticker_details(self):
@@ -382,7 +383,6 @@ class Screener(object):
                 for row in self.data
             ],
             self._user_agent,
-            passedFilters = "test",
         )
 
         for entry in ticker_data:

@@ -30,8 +30,8 @@ cur_big_filtered.execute("drop table if exists big_filtered")
 cur_toh_filtered.execute("drop table if exists toh_filtered")
 
 # Filters
-bigFilters = ["sh_curvol_o200", "sh_opt_option","sh_price_o100"] # Big filter
-tohFilters = ["sh_curvol_o2000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
+bigFilters = ["sh_curvol_o20000", "sh_opt_option","sh_price_o100"] # Big filter
+tohFilters = ["sh_curvol_o20000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
 
 # Screening/scraping finviz process
 big_list = Screener(filters=bigFilters, order="ticker")
@@ -65,6 +65,24 @@ print('Filtered 20-100 count: ' + str(cur_toh_filtered.execute("select count(tic
 # Commit changes to databases
 con_toh_filtered.commit()
 con_big_filtered.commit()
+
+print("")
+filteredTickersBig = []
+filteredTickersToh = []
+
+# Change data of screener objects to filtered tickers
+for row in cur_big_filtered.execute("select ticker from big_filtered"):
+    filteredTickersBig.append(row[0])
+big_list.data = filteredTickersBig
+
+for row in cur_toh_filtered.execute("select ticker from toh_filtered"):
+    filteredTickersToh.append(row[0])
+toh_list.data = filteredTickersToh
+
+big_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
+big_list.get_charts(period='w',size='m',chart_type='c',ta='0') # weekly
+toh_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
+toh_list.get_charts(period='w',size='m',chart_type='c',ta='0') # daily
 
 print("")
 end_time = time.time()

@@ -62,10 +62,26 @@ def sequential_data_scrape(
     scrape_func: Callable, urls: List[str], user_agent: str, *args, **kwargs,
 ) -> List[Dict]:
     data = []
+    description = "Getting charts"
     
-    currentFilterVol = int(kwargs['passFilters'][0].split('_')[2][1::])
+    if 'passFilters' in kwargs:
+        currentFilterVol = int(kwargs['passFilters'][0].split('_')[2][1::])
+        description = "Grabbing screen 'Big'" if currentFilterVol == 200 else "Grabbing screen '20-100'"
 
-    for url in tqdm(urls, desc="Grabbing screen 'Big'" if currentFilterVol == 200 else "Grabbing screen '20-100'", disable="DISABLE_TQDM" in os.environ):
+    if 'chartConfig' in kwargs:
+        currentFilterVol = int(kwargs['passFilters'][0].split('_')[2][1::])
+        if currentFilterVol == 200: # Big
+            if kwargs['chartConfig'] == 'd':
+                description = "Grabbing charts - Big/Daily"
+            if kwargs['chartConfig'] == 'w':
+                description = "Grabbing charts - Big/Weekly"
+        else: # 20-100
+            if kwargs['chartConfig'] == 'd':
+                description = "Grabbing charts - 20-100/Daily"
+            if kwargs['chartConfig'] == 'w':
+                description = "Grabbing charts - 20-100/Weekly"
+                
+    for url in tqdm(urls, desc=description, disable="DISABLE_TQDM" in os.environ):
         try:
             response = finviz_request(url, user_agent)
             kwargs["URL"] = url
