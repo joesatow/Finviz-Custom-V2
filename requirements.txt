@@ -8,3 +8,5 @@ user_agent~=0.1.9
 cssselect~=1.1.0
 tqdm~=4.61.1
 tenacity~=7.0.0
+ratelimit==2.2.1
+backoff==2.1.2

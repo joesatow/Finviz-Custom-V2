@@ -9,7 +9,8 @@ print("")
 
 # Create current directory
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
-currentDirectory = '/Library/Webserver/Documents/v2'
+#currentDirectory = '/Library/WebServer/Documents/v2'
+currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
 
 # Create connections to databases
 con_big = sqlite3.connect(f"{currentDirectory}/databases/big_list.sqlite")

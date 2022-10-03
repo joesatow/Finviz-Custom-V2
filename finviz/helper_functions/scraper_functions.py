@@ -70,7 +70,8 @@ def get_page_urls(page_content, rows, url):
     return urls
 
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
-currentDirectory = '/Library/Webserver/Documents/v2'
+#currentDirectory = '/Library/WebServer/Documents/v2'
+currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
 def download_chart_image(page_content: requests.Response, **kwargs):
     """ Downloads a .png image of a chart into the "charts" folder. """
     file_name = f"{kwargs['URL'].split('t=')[1]}_{int(time.time())}.png"
@@ -88,9 +89,6 @@ def download_chart_image(page_content: requests.Response, **kwargs):
             if kwargs['chartConfig'] == 'w':
                 currentFolder = f"{currentDirectory}/charts/toh-weekly"
     
-    if not os.path.exists(currentFolder):
-        os.mkdir(currentFolder)
-
     with open(os.path.join(currentFolder, file_name), "wb") as handle:
         handle.write(page_content.content)
 
