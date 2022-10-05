@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title> Finviz CUSTOM </title>
+	<h1 align = "center">Finviz CUSTOM</h1>
+
+<style>
+		
+table {
+  margin: 50px 0px 0px 0px;
+}
+
+body {
+  padding: 10px;
+}
+
+.buttonsTable {
+	margin-left: auto;
+	margin-right: auto;
+	width: 50%;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+th {
+	font-size: 20px;
+}
+
+th, td {
+  padding: 10px;   
+}
+
+.button {
+	padding: 4px 20px;
+	display: block;
+	margin: auto;
+}
+
+.charts-gal {
+    border-color: #fff;
+    border-style: solid;
+}
+
+
+.container { 
+  height: 40px;
+  position: relative;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.portfolio-buttons-normal {
+  background-color: light gray;
+}
+
+.portfolio-buttons-active {
+  background-color: pink;
+  outline: none;
+}
+
+#firstRow {
+  align: center
+}
+
+</style>
+</head>
+
+<body>
+
+<table class = "buttonsTable">
+	<tr>
+		<th colspan="2">Big</th>
+		<th colspan="2">20-100</th>
+	</tr>
+	<tr>
+		<td><button class="button portfolio-buttons-normal" type="button" onclick="loadBigDaily()">Daily</button></td>
+		<td><button class="button portfolio-buttons-normal" type="button" onclick="loadBigWeekly()">Weekly</button></td>
+		<td><button class="button portfolio-buttons-normal" type="button" onclick="load20Daily()">Daily</button></td>
+		<td><button class="button portfolio-buttons-normal" type="button" onclick="load20Weekly()">Weekly</button></td>
+	</tr>
+	<tr id = "firstRow">
+		<td>test</td>
+	</tr>
+	<tr id = "secondRow">
+		
+	</tr>
+</table>
+
+
+<div id="chartsTable">
+
+</div>
+
+  
+<script>
+	
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("firstRow").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "firstRow.txt", true);
+  xhttp.send();
+  
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("secondRow").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "secondRow.txt", true);
+  xhttp.send();
+	
+function loadBigDaily() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("chartsTable").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "bigDaily.txt", true);
+  xhttp.send();
+}
+
+function loadBigWeekly() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("chartsTable").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "bigWeekly.txt", true);
+  xhttp.send();
+}
+
+function load20Daily() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("chartsTable").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "20Daily.txt", true);
+  xhttp.send();
+}
+
+function load20Weekly() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("chartsTable").innerHTML =
+      this.responseText;
+    }
+  };
+  xhttp.open("GET", "20Weekly.txt", true);
+  xhttp.send();
+}
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+/* Add the active class to the button passed in */
+function setThisButtonActive(button) {
+  button.classList.add("portfolio-buttons-active");
+}
+
+/* select all active buttons, and remove the active class from them */
+function resetActiveButton() {
+  document.querySelectorAll(".portfolio-buttons-active").forEach((button) => {
+    button.classList.remove("portfolio-buttons-active");
+  });
+}
+
+document.querySelectorAll(".button").forEach((button) => {
+  button.addEventListener("click", function() {
+    resetActiveButton();
+    setThisButtonActive(button);
+  });
+});
+
+</script>
+
+<footer>
+	<div class="container">
+  <div class="center">
+    <button onclick="topFunction()" title="Go to top">Top</button>
+  </div>
+</div>
+</footer>
+
+</body>
+
+</html>

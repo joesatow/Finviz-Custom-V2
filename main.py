@@ -3,14 +3,31 @@ from finviz.screener import Screener
 
 import sqlite3
 import time
+import os, shutil
 start_time = time.time()
-
-print("")
 
 # Create current directory
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
 #currentDirectory = '/Library/WebServer/Documents/v2'
 currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
+
+# Wipe folders
+big_daily_charts_path = f"{currentDirectory}/charts/big-daily"
+big_weekly_charts_path = f"{currentDirectory}/charts/big-weekly"
+toh_daily_charts_path = f"{currentDirectory}/charts/toh-daily"
+toh_weekly_charts_path = f"{currentDirectory}/charts/toh-weekly"
+chartFolderPathList = [big_daily_charts_path,big_weekly_charts_path,toh_daily_charts_path,toh_weekly_charts_path]
+
+for folderPath in chartFolderPathList:
+    for filename in os.listdir(folderPath):
+        file_path = os.path.join(folderPath, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 # Create connections to databases
 con_big = sqlite3.connect(f"{currentDirectory}/databases/big_list.sqlite")
@@ -45,8 +62,10 @@ big_list.to_sqlite(f"{currentDirectory}/databases/big_list.sqlite")
 toh_list.to_sqlite(f"{currentDirectory}/databases/toh_list.sqlite")
 
 # Get and display current counts
-print("Big count: " + str(cur_big.execute("select count(No) from screener_results").fetchall()[0][0]))
-print('20-100 count: ' + str(cur_toh.execute("select count(No) from screener_results").fetchall()[0][0]))
+big_count = cur_big.execute("select count(No) from screener_results").fetchall()[0][0]
+toh_count = cur_toh.execute("select count(No) from screener_results").fetchall()[0][0]
+print("Big count: " + str(big_count))
+print('20-100 count: ' + str(toh_count))
 
 # Create filtered tables if not exist
 cur_big_filtered.execute('create table if not exists big_filtered (ticker varchar(5))')
@@ -59,9 +78,14 @@ filterTickers(cur_big, cur_big_filtered, 'big_filtered')
 filterTickers(cur_toh, cur_toh_filtered, 'toh_filtered')
 
 # Get and display current FILTERED counts
+big_filtered_count = cur_big_filtered.execute("select count(ticker) from big_filtered").fetchall()[0][0]
+toh_filtered_count = cur_toh_filtered.execute("select count(ticker) from toh_filtered").fetchall()[0][0]
 print("")
-print("Filtered big count: " + str(cur_big_filtered.execute("select count(ticker) from big_filtered").fetchall()[0][0]))
-print('Filtered 20-100 count: ' + str(cur_toh_filtered.execute("select count(ticker) from toh_filtered").fetchall()[0][0]))
+print("Filtered big count: " + str(big_filtered_count))
+print('Filtered 20-100 count: ' + str(toh_filtered_count))
+
+with open('resultsOutput.txt', 'w') as f:
+    f.write(str(big_count))
 
 # Commit changes to databases
 con_toh_filtered.commit()
