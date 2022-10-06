@@ -18,6 +18,7 @@ toh_daily_charts_path = f"{currentDirectory}/charts/toh-daily"
 toh_weekly_charts_path = f"{currentDirectory}/charts/toh-weekly"
 chartFolderPathList = [big_daily_charts_path,big_weekly_charts_path,toh_daily_charts_path,toh_weekly_charts_path]
 
+print("Deleting charts folders contents...")
 for folderPath in chartFolderPathList:
     for filename in os.listdir(folderPath):
         file_path = os.path.join(folderPath, filename)
@@ -28,6 +29,8 @@ for folderPath in chartFolderPathList:
                 shutil.rmtree(file_path)
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))
+print("Done...")
+print("")
 
 # Create connections to databases
 con_big = sqlite3.connect(f"{currentDirectory}/databases/big_list.sqlite")
@@ -48,8 +51,8 @@ cur_big_filtered.execute("drop table if exists big_filtered")
 cur_toh_filtered.execute("drop table if exists toh_filtered")
 
 # Filters
-bigFilters = ["sh_curvol_o20000", "sh_opt_option","sh_price_o100"] # Big filter
-tohFilters = ["sh_curvol_o20000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
+bigFilters = ["sh_curvol_o200", "sh_opt_option","sh_price_o100"] # Big filter
+tohFilters = ["sh_curvol_o2000", "sh_opt_option", "sh_price_20to100"] # 20-100 filter
 
 # Screening/scraping finviz process
 big_list = Screener(filters=bigFilters, order="ticker")
@@ -85,7 +88,7 @@ print("Filtered big count: " + str(big_filtered_count))
 print('Filtered 20-100 count: ' + str(toh_filtered_count))
 
 with open('resultsOutput.txt', 'w') as f:
-    f.write(str(big_count))
+    f.write(str([big_count,toh_count,big_filtered_count,toh_filtered_count]))
 
 # Commit changes to databases
 con_toh_filtered.commit()

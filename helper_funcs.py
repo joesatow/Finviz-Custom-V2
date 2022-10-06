@@ -1,4 +1,4 @@
-from ratelimit import limits, sleep_and_retry, RateLimitException
+from ratelimit import limits, sleep_and_retry
 from backoff import on_exception, expo
 from tqdm import tqdm
 import requests
@@ -12,19 +12,42 @@ print("Nearest friday: " + toDate + ".")
 print("")
 
 def filterTickers(mainList, filteredList, tableName):
+    with open("monthlyOptionTickers.txt") as file:
+        for line in file:
+            excludedTickers = line.split(',')
+    file.close()
+
+    with open("weeklyOptionTickers.txt") as file:
+        for line in file:
+            includedTickers = line.split(',')
+    file.close()
+
     tickers = []
     for row in mainList.execute("select ticker from screener_results"):
         tickers.append(row)
 
     for ticker in tqdm(tickers, desc = "Filtering 'big'" if tableName=='big_filtered' else "Filtering '20-100'"):
+        if ticker[0] in excludedTickers:
+            continue
+        elif ticker[0] in includedTickers:
+            # Add to filtered list
+            filteredList.execute(f"insert into {tableName} (ticker) values ('{ticker[0]}')")
+            continue
+
         data = callApi(ticker)
-        
         if (data['status'] == "FAILED"): # Closest friday had no options, hence failed
                 #print('no friday options for: ' + ticker[0] + ' :)')
-                continue
+                with open("monthlyOptionTickers.txt", 'a') as file:
+                    file.write(f',{ticker[0]}')
+                file.close()
+        else:
+            # Add to filtered list
+            filteredList.execute(f"insert into {tableName} (ticker) values ('{ticker[0]}')")
+            with open("weeklyOptionTickers.txt", 'a') as file:
+                file.write(f',{ticker[0]}')
+            file.close()
 
-        # Add to filtered list
-        filteredList.execute(f"insert into {tableName} (ticker) values ('{ticker[0]}')")
+        
 
 @on_exception(expo, requests.exceptions.RequestException, max_time=60)
 @sleep_and_retry
