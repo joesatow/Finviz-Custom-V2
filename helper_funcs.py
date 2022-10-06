@@ -37,12 +37,16 @@ def filterTickers(mainList, filteredList, tableName):
         data = callApi(ticker)
         if (data['status'] == "FAILED"): # Closest friday had no options, hence failed
                 #print('no friday options for: ' + ticker[0] + ' :)')
+
+                # Add to monthlyOptionTickers txt file
                 with open("monthlyOptionTickers.txt", 'a') as file:
                     file.write(f',{ticker[0]}')
                 file.close()
         else:
             # Add to filtered list
             filteredList.execute(f"insert into {tableName} (ticker) values ('{ticker[0]}')")
+
+            # Add to weeklyOptionTickers txt file
             with open("weeklyOptionTickers.txt", 'a') as file:
                 file.write(f',{ticker[0]}')
             file.close()

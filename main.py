@@ -107,10 +107,10 @@ for row in cur_toh_filtered.execute("select ticker from toh_filtered"):
     filteredTickersToh.append(row[0])
 toh_list.data = filteredTickersToh
 
-big_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
-big_list.get_charts(period='w',size='m',chart_type='c',ta='0') # weekly
-toh_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
-toh_list.get_charts(period='w',size='m',chart_type='c',ta='0') # daily
+# big_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
+# big_list.get_charts(period='w',size='m',chart_type='c',ta='0') # weekly
+# toh_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
+# toh_list.get_charts(period='w',size='m',chart_type='c',ta='0') # daily
 
 print("")
 end_time = time.time()
