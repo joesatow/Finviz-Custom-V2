@@ -12,13 +12,13 @@ start_time = time.time()
 currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
 
 # Wipe folders
+print("Deleting charts folders contents...")
 big_daily_charts_path = f"{currentDirectory}/charts/big-daily"
 big_weekly_charts_path = f"{currentDirectory}/charts/big-weekly"
 toh_daily_charts_path = f"{currentDirectory}/charts/toh-daily"
 toh_weekly_charts_path = f"{currentDirectory}/charts/toh-weekly"
 chartFolderPathList = [big_daily_charts_path,big_weekly_charts_path,toh_daily_charts_path,toh_weekly_charts_path]
 
-print("Deleting charts folders contents...")
 for folderPath in chartFolderPathList:
     for filename in os.listdir(folderPath):
         file_path = os.path.join(folderPath, filename)
@@ -87,8 +87,35 @@ print("")
 print("Filtered big count: " + str(big_filtered_count))
 print('Filtered 20-100 count: ' + str(toh_filtered_count))
 
+def getHTML(dbCursor,dbTable,filepath):
+    html = '' 
+    temp = '<tr>'
+    count = 1
+    for row in dbCursor.execute(f'select ticker from {dbTable}'):
+        temp += f'<td><img src="charts/{filepath}/{row[0]}.png"</td>'
+        if count % 4 == 0:
+            temp += '</tr>'
+            html += temp
+            temp = '<tr>'
+        count += 1
+    if temp != "<tr>":
+        temp += '</tr>'
+        html += temp
+    return html
+
+bigDailyHTML = getHTML(cur_big_filtered,'big_filtered','big-daily')
+bigWeeklyHTML = getHTML(cur_big_filtered,'big_filtered','big-weekly')
+tohDailyHTML = getHTML(cur_toh_filtered,'toh_filtered','toh-daily')
+tohWeeklyHTML = getHTML(cur_toh_filtered,'toh_filtered','toh-weekly')
+
 with open('resultsOutput.txt', 'w') as f:
-    f.write(str([big_count,toh_count,big_filtered_count,toh_filtered_count]))
+    stringToWrite = f"<td colspan=2>Original count: {big_count}</td><td colspan=2>Original count: {toh_count}</td>,"
+    stringToWrite += f"<td colspan=2>Filtered count: {big_filtered_count}</td><td colspan=2>Filtered count: {toh_filtered_count}</td>,"
+    stringToWrite += bigDailyHTML + ','
+    stringToWrite += bigWeeklyHTML + ','
+    stringToWrite += tohDailyHTML + ','
+    stringToWrite += tohWeeklyHTML
+    f.write(stringToWrite)
 
 # Commit changes to databases
 con_toh_filtered.commit()
@@ -107,10 +134,10 @@ for row in cur_toh_filtered.execute("select ticker from toh_filtered"):
     filteredTickersToh.append(row[0])
 toh_list.data = filteredTickersToh
 
-# big_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
-# big_list.get_charts(period='w',size='m',chart_type='c',ta='0') # weekly
-# toh_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
-# toh_list.get_charts(period='w',size='m',chart_type='c',ta='0') # daily
+big_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
+big_list.get_charts(period='w',size='m',chart_type='c',ta='0') # weekly
+toh_list.get_charts(period='d',size='m',chart_type='c',ta='0') # daily
+toh_list.get_charts(period='w',size='m',chart_type='c',ta='0') # daily
 
 print("")
 end_time = time.time()
