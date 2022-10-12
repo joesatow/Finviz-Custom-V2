@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 from finviz.screener import Screener
+from helper_funcs import getCurrentDirectory, filterTickers
 
 import sqlite3
 import time
 import os, shutil
 start_time = time.time()
 
-# Create current directory
-#currentDirectory = '/var/www/hmtl/Finviz-Customs'
-#currentDirectory = '/Library/WebServer/Documents/v2'
-currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
+# Set current directory
+currentDirectory = getCurrentDirectory()
 
 # Wipe folders
 print("Deleting charts folders contents...")
@@ -75,7 +74,6 @@ cur_big_filtered.execute('create table if not exists big_filtered (ticker varcha
 cur_toh_filtered.execute('create table if not exists toh_filtered (ticker varchar(5))')
 
 print("")
-from helper_funcs import filterTickers
 # Filter tickers that only have nearest friday options
 filterTickers(cur_big, cur_big_filtered, 'big_filtered')  
 filterTickers(cur_toh, cur_toh_filtered, 'toh_filtered')

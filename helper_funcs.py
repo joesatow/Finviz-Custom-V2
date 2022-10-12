@@ -4,12 +4,17 @@ from tqdm import tqdm
 import requests
 import datetime
 
+# Current working directory
+#currentDirectory = '/var/www/hmtl/Finviz-Customs'
+#currentDirectory = '/Library/WebServer/Documents/v2'
+currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
+def getCurrentDirectory():
+    return currentDirectory
+
 # Get nearest friday 
 toDate = datetime.datetime.now()
 toDate = toDate + datetime.timedelta( (4-toDate.weekday()) % 7 )
 toDate = toDate.strftime("%Y-%m-%d")
-print("Nearest friday: " + toDate + ".")
-print("")
 
 def filterTickers(mainList, filteredList, tableName):
     with open("monthlyOptionTickers.txt") as file:

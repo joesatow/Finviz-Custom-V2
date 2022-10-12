@@ -15,7 +15,11 @@ th {
 }
 
 th, td {
-  padding: 10px;   
+	padding: 10px;   
+}
+
+#chartsTable td {
+	text-align: center;
 }
 
 button {
@@ -25,6 +29,7 @@ button {
 }
 
 #chartsTable {
+	margin-top: 50px;
 	margin-left: auto;
 	margin-right: auto;
 	width: 80%;
