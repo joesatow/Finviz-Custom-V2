@@ -40,7 +40,7 @@ def get_table(page_html: requests.Response, headers, rows=None, **kwargs):
 def get_total_rows(page_content):
     """ Returns the total number of rows(results). """
 
-    total_element = page_content.cssselect('td[width="140"]')
+    total_element = page_content.cssselect('td[width="128"]')
     total_number = (
         etree.tostring(total_element[0]).decode("utf-8").split("</b>")[1].split()[0]
     )
@@ -69,8 +69,8 @@ def get_page_urls(page_content, rows, url):
     return urls
 
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
-#currentDirectory = '/Library/WebServer/Documents/v2'
-currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
+currentDirectory = '/Library/WebServer/Documents/v2'
+#currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
 def download_chart_image(page_content: requests.Response, **kwargs):
     """ Downloads a .png image of a chart into the "charts" folder. """
     file_name = f"{kwargs['URL'].split('t=')[1]}.png"
