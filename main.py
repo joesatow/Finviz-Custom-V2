@@ -2,6 +2,7 @@
 from finviz.screener import Screener
 from helper_funcs import getCurrentDirectory, filterTickers
 
+import time
 import sqlite3
 import time
 import os, shutil
@@ -55,6 +56,7 @@ tohFilters = ["sh_curvol_o2000", "sh_opt_option", "sh_price_20to100"] # 20-100 f
 
 # Screening/scraping finviz process
 big_list = Screener(filters=bigFilters, order="ticker")
+time.sleep(1)
 toh_list = Screener(filters=tohFilters, order="ticker")
 
 print("")

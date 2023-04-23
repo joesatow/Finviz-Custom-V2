@@ -6,7 +6,7 @@ import datetime
 
 # Current working directory
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
-currentDirectory = '/Library/WebServer/Documents/v2'
+currentDirectory = '/var/www/html/Finviz-Custom-V2'
 #currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
 def getCurrentDirectory():
     return currentDirectory
