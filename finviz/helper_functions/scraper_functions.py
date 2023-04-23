@@ -70,6 +70,7 @@ def get_page_urls(page_content, rows, url):
 
     return urls
 
+#fix
 #currentDirectory = '/var/www/hmtl/Finviz-Customs'
 currentDirectory = '/var/www/html/Finviz-Custom-V2'
 #currentDirectory = '/Library/WebServer/Documents/Finviz-Custom-V2'
