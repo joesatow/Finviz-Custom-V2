@@ -47,6 +47,8 @@ def export_to_db(headers, data, filename):
     c = conn.cursor()
 
     for field in headers:
+        if '\r\n' in field:
+            continue
         field_cleaned = re.sub(r"[^\w\s]", "", field)
         field_cleaned = field_cleaned.replace(" ", "")
         field_cleaned = field_cleaned.replace("50DHigh", "High50D")
